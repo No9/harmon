@@ -1,7 +1,7 @@
 harmon
 ======
 
-A middleware component for ![node-http-proxy](https://github.com/nodejitsu/node-http-proxy) using ![trumpet](https://github.com/substack/node-trumpet) to parse and transform the response from the proxied server.
+A middleware component for [node-http-proxy](https://github.com/nodejitsu/node-http-proxy) using [trumpet](https://github.com/substack/node-trumpet) to parse and transform the response from the proxied server.
 
 [![build status](https://secure.travis-ci.org/No9/harmon.png)](http://travis-ci.org/No9/harmon)
 
