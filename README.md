@@ -5,7 +5,7 @@ A middleware component for ![node-http-proxy](https://github.com/nodejitsu/node-
 
 [![build status](https://secure.travis-ci.org/No9/harmon.png)](http://travis-ci.org/No9/harmon)
 
-With apologies to ![substack](https://github.com/substack/) & ![nodejitsu](https://github.com/nodejitsu)
+With apologies to [substack](https://github.com/substack/) & [nodejitsu](https://github.com/nodejitsu)
 
 ![harmon](http://i.imgur.com/nQ0t1.jpg)
 
@@ -28,7 +28,7 @@ To run it
 $ cd examples
 $ node simple.js
 ```
-Browse to ![localhost:8000](http://localhost:8000) and you should see:
+Browse to [localhost:8000](http://localhost:8000) and you should see:
 
 ![simple output](http://i.imgur.com/Gpbzt.png)
 
@@ -68,4 +68,4 @@ http.createServer(function (req, res) {
   res.end();
 }).listen(9000); 
 ```
-See ![trumpet](https://github.com/No9/node-trumpet#update) for the types of queries and functions you can pass.
+See [trumpet](https://github.com/No9/node-trumpet#update) for the types of queries and functions you can pass.
