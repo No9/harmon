@@ -14,16 +14,28 @@ examples
 
 simple
 ------
-This is a basic example of the module.
-It replaces 
+### Overview
+------------
+In this example of the module the following HTML:
 ``` html
-<div class="b">& Frames</div> 
+<html>
+	<head></head>
+	<body>
+		<div class="a">Nodejitsu Http Proxy</div>
+		<div class="b">&amp; Frames</div>
+	</body>
+</html>
 ```
-with 
+Is returned from the remote server and parsed with the the line: 
+``` html
+<div class="b">&amp; Frames</div> 
+```
+Being replaced with: 
 ``` html 
 <div>+ Trumpet</div>
 ``` 
-To run it 
+### Run It! 
+----------- 
 ```
 $ cd examples
 $ node simple.js
@@ -32,6 +44,8 @@ Browse to [localhost:8000](http://localhost:8000) and you should see:
 
 ![simple output](http://i.imgur.com/Gpbzt.png)
 
+### Code
+--------
 ``` js
 var http = require('http'),
     httpProxy = require('http-proxy');
@@ -64,7 +78,7 @@ httpProxy.createServer(
 // Create a simple web server for the proxy to send requests to and manipulate the data from
 http.createServer(function (req, res) {
   res.writeHead(200, { 'Content-Type': 'text/html' });
-  res.write('<html><head></head><body><div class="a">Nodejitsu Http Proxy</div><div class="b">& Frames</div></body></html>');
+  res.write('<html><head></head><body><div class="a">Nodejitsu Http Proxy</div><div class="b">&amp; Frames</div></body></html>');
   res.end();
 }).listen(9000); 
 ```
