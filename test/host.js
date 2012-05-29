@@ -2,6 +2,7 @@ var assert = require('assert'),
     http = require('http'),
     httpProxy = require('http-proxy');
 
+	var testcount = 0;
 // Create an array of selects that harmon will process. 
 var actions = [];
 
@@ -51,7 +52,10 @@ http.get(options, function(res) {
   res.on('end', function()
   {
 	assert.equal('<html><head></head><body><div class="a">Nodejitsu Http Proxy</div><div>+ Trumpet</div></body></html>', out);
-			
+    console.log("Executed the simple test");
+	testcount++;
+	assert.equal(1, testcount);
+	console.log("Test Complete");
 	process.exit(0);
   });
   //
