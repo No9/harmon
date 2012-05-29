@@ -16,7 +16,7 @@ simple
 ------
 ### Overview
 ------------
-In this example of the module the following HTML:
+In this example the following HTML:
 ``` html
 <html>
 	<head></head>
@@ -26,11 +26,12 @@ In this example of the module the following HTML:
 	</body>
 </html>
 ```
-Is returned from the remote server and parsed with the the line: 
+Is returned from the remote server and parsed.  
+The following line: 
 ``` html
 <div class="b">&amp; Frames</div> 
 ```
-Being replaced with: 
+Is replaced with: 
 ``` html 
 <div>+ Trumpet</div>
 ``` 

@@ -20,6 +20,6 @@ httpProxy.createServer(
 
 http.createServer(function (req, res) {
   res.writeHead(200, { 'Content-Type': 'text/html' });
-  res.write('<html><head></head><body><div class="a">Nodejitsu Http Proxy</div><div class="b">& Frames</div></body></html>');
+  res.write('<html><head></head><body><div class="a">Nodejitsu Http Proxy</div><div class="b">&amp; Frames</div></body></html>');
   res.end();
 }).listen(9000); 
