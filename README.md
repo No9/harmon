@@ -5,9 +5,9 @@ A middleware component for [node-http-proxy](https://github.com/nodejitsu/node-h
 
 [![build status](https://secure.travis-ci.org/No9/harmon.png)](http://travis-ci.org/No9/harmon)
 
-With apologies to [substack](https://github.com/substack/) & [nodejitsu](https://github.com/nodejitsu)
+With apologies to [connect-gzip](https://github.com/nateps/connect-gzip)
 
-![harmon](http://i.imgur.com/nQ0t1.jpg)
+![harmon](http://i.imgur.com/fpMGL.png)
 
 examples
 ========
@@ -16,7 +16,7 @@ simple
 ------
 ### Overview
 ------------
-In this example the following HTML:
+In this example the HTML below is returned from the remote server and parsed:
 ``` html
 <html>
 	<head></head>
@@ -26,12 +26,12 @@ In this example the following HTML:
 	</body>
 </html>
 ```
-Is returned from the remote server and parsed.  
-The following line: 
+  
+The following line is removed: 
 ``` html
 <div class="b">&amp; Frames</div> 
 ```
-Is replaced with: 
+And is replaced with: 
 ``` html 
 <div>+ Trumpet</div>
 ``` 
@@ -72,7 +72,7 @@ actions.push(simpleaction);
 
 // Create a node-http-proxy configured with our harmon middleware
 httpProxy.createServer(
-  require('../').harmon(selects),
+  require('../').harmon(actions),
   9000, 'localhost'
 ).listen(8000);
 
