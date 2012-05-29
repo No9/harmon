@@ -28,6 +28,6 @@
         "tap" : "~0.2.3"
     },
     "scripts" : {
-        "test" : "tap test/*.js"
+        "test" : "node test/host.js"
   }
 }
