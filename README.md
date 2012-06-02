@@ -9,6 +9,11 @@ With apologies to [connect-gzip](https://github.com/nateps/connect-gzip)
 
 ![harmon](http://i.imgur.com/fpMGL.png)
 
+install
+=======
+```
+$ npm install harmon
+```
 examples
 ========
 
@@ -37,8 +42,9 @@ And is replaced with:
 ``` 
 ### Run It! 
 ----------- 
+from your project root:
 ```
-$ cd examples
+$ cd node_modules/harmon/examples
 $ node simple.js
 ```
 Browse to [localhost:8000](http://localhost:8000) and you should see:
@@ -83,4 +89,11 @@ http.createServer(function (req, res) {
   res.end();
 }).listen(9000); 
 ```
+or 
+See how images could be rotated.
+```
+$ cd node_modules/harmon/examples
+$ node rotate.js
+```
+
 See [trumpet](https://github.com/No9/node-trumpet#update) for the types of queries and functions you can pass.
