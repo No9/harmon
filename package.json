@@ -1,40 +1,3 @@
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-{
-  "name": "harmon",
-  "description": "A piece of middleware for node-http-proxy that allows you to modify the remote service response with trumpet",
-  "tags": [
-    "http-proxy",
-    "trumpet",
-    "middleware",
-    "streaming",
-    "html"
-  ],
-  "version": "0.0.4",
-  "author": {
-    "name": "Anton Whalley",
-    "email": "anton.whalley@vodafone.ie"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/No9/harmon.git"
-  },
-  "bugs": {
-    "url": "https://github.com/No9/harmon/issues"
-  },
-  "dependencies": {
-    "http-proxy": "0.8.0",
-    "trumpet": "0.3.0"
-  },
-  "devDependencies" : {
-    },
-    "scripts" : {
-        "test" : "node test/host.js"
-  }
-}
-=======
->>>>>>> e77f302f4b98ab0c7ea3767e4aef9a0d788ac141
 {
   "name": "harmon",
   "description": "A piece of middleware for node-http-proxy that allows you to modify the remote service response with trumpet",
@@ -68,9 +31,5 @@
         "test" : "tap test/host.js"
   },
   "license" : "MIT/X11"
-<<<<<<< HEAD
+
 }
-=======
-}
->>>>>>> Added Request Selectors & TAP
->>>>>>> e77f302f4b98ab0c7ea3767e4aef9a0d788ac141
