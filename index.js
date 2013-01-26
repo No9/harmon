@@ -18,14 +18,6 @@ module.exports = function harmon(reqselectors, resselectors) {
 			reqtr.write(data);
 		});
 		
-		/*
-		reqtr.on('data', function (buf) { 
-			console.log(buf.toString());
-			//req.write(buf);
-			//_reqwrite.call(req, buf);
-		});*/
-			
-		
     	res.write = function (data) {
 			var tr = trumpet();
 			
