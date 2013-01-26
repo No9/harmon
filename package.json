@@ -25,7 +25,7 @@
     "trumpet": "0.3.1"
   },
   "devDependencies" : {
-        "tap" : "~0.2.3"
+        "tap" : "0.4.0"
     },
     "scripts" : {
         "test" : "tap test/host.js"
