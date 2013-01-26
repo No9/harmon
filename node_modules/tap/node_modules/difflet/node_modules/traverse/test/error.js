@@ -1,13 +1,11 @@
-var assert = require('assert');
-var Traverse = require('../');
+var test = require('tap').test;
+var traverse = require('../');
 
-exports['traverse an Error'] = function () {
+test('traverse an Error', function (t) {
     var obj = new Error("test");
-
-    var results = Traverse(obj).map(function (node) { });
-
-    assert.deepEqual(results, {
-        message: 'test'
-    });
-};
+    var results = traverse(obj).map(function (node) {});
+    t.same(results, { message: 'test' });
+    
+    t.end();
+});
 

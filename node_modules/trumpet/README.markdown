@@ -127,7 +127,9 @@ $ node example/update.js
 methods
 =======
 
+``` js
 var trumpet = require('trumpet')
+```
 
 var tr = trumpet(opts)
 ----------------------

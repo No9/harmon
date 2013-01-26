@@ -1,8 +1,9 @@
-var assert = require('assert'),
-    http = require('http'),
-    httpProxy = require('http-proxy');
+var test = require("tap").test;
+var assert = require('assert');
+var http = require('http');
+var httpProxy = require('http-proxy');
 
-	var testcount = 0;
+  
 // Create an array of selects that harmon will process. 
 var actions = [];
 
@@ -22,9 +23,28 @@ simpleaction.func = function (node) {
 // Add the action to the action array
 actions.push(simpleaction);
 
+var reqaction = {};
+reqaction.query = '.a';
+
+// Create an function that is executed when that node is selected. Here we just replace '& frames' with '+trumpet' 
+reqaction.func = function (node) {
+                        node.replace(function (html) {
+							test("Request Test", function (t) {
+								t.plan(1);
+								t.ok(true, "Request Selector Has Been Called");
+								t.end();
+							});
+                            return '<div>Nearform Middleware</div>';
+                        });
+                    } 
+
+var reqactions = [];
+reqactions.push(reqaction);
+
+
 // Create a node-http-proxy configured with our harmon middleware
 httpProxy.createServer(
-  require('../').harmon(actions),
+  require('../')(reqactions, actions),
   9000, 'localhost'
 ).listen(8000);
 
@@ -41,6 +61,8 @@ var options = {
   path: "/",
   headers: {}
 };
+
+/*Simple Request Test*/
 http.get(options, function(res) {
   //console.log(res.toString());
   var out = "";
@@ -51,14 +73,35 @@ http.get(options, function(res) {
   
   res.on('end', function()
   {
-	assert.equal('<html><head></head><body><div class="a">Nodejitsu Http Proxy</div><div>+ Trumpet</div></body></html>', out);
-    console.log("Executed the simple test");
-	testcount++;
-	assert.equal(1, testcount);
-	console.log("Test Complete");
+    test("Response Test", function (t) {
+		t.plan(1);
+		t.equal('<html><head></head><body><div class="a">Nodejitsu Http Proxy</div><div>+ Trumpet</div></body></html>', out, "Response Correct");
+		t.ok(true, "Response Selector Has Been Called");
+		t.end();
+    });
 	process.exit(0);
   });
-  //
-  //res.pipe(process.stdout);
 });
 	
+var options = {
+   host: 'localhost',
+   port: 8000,
+   path: '/',
+   method: 'POST'
+};
+
+var req = http.request(options, function(res) {
+  res.setEncoding('utf8');
+  res.on('data', function (chunk) {
+    console.log('BODY: ' + chunk);
+  });
+});
+
+req.on('error', function(e) {
+  console.log('problem with request: ' + e.message);
+});
+
+// write data to request body
+req.write('<html><head></head><body><div class="a">Nodejitsu Http Proxy</div><div class="b">&amp; Frames</div></body></html>');
+req.end();
+
