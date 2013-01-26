@@ -12,7 +12,7 @@ test('umask sync modes', function (t) {
     var file = '/tmp/' + [x,y,z].join('/');
 
     try {
-        mkdirp.sync(file, 0755);
+        mkdirp.sync(file);
     } catch (err) {
         t.fail(err);
         return t.end();

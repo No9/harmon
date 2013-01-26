@@ -19,7 +19,7 @@ simpleselect.func = function (node) {
 selects.push(simpleselect);
 
 httpProxy.createServer(
-  require('../').harmon(selects),
+  require('../')([], selects),
   9000, 'localhost'
 ).listen(8000);
 

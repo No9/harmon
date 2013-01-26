@@ -3,7 +3,7 @@ var trumpet = require('../');
 var fs = require('fs');
 
 test('update', function (t) {
-    t.plan(6);
+    t.plan(7);
     var html = fs.readFileSync(__dirname + '/update_target.html', 'utf8');
     
     var tr = trumpet();
@@ -33,5 +33,6 @@ test('update', function (t) {
     
     tr.on('end', function () {
         t.equal(data, html);
+        t.end();
     });
 });

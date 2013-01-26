@@ -3,6 +3,7 @@ var createNode = require('./node');
 
 module.exports = function (parser, opts) {
     var stream = new Stream;
+    stream.parser = parser;
     stream.writable = true;
     stream.readable = true;
     
