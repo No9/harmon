@@ -28,7 +28,7 @@
         "tap" : "0.4.0"
     },
     "scripts" : {
-        "test" : "tap test/host.js"
+        "test" : "node test/host.js"
   },
   "license" : "MIT/X11"
 

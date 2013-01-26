@@ -55,33 +55,7 @@ http.createServer(function (req, res) {
   res.end();
 }).listen(9000); 
 
-var options = {
-  host: "localhost",
-  port: 8000,
-  path: "/",
-  headers: {}
-};
 
-/*Simple Request Test*/
-http.get(options, function(res) {
-  //console.log(res.toString());
-  var out = "";
-  res.on('data', function(buf)
-  {
-	out+= buf;
-  });
-  
-  res.on('end', function()
-  {
-    test("Response Test", function (t) {
-		t.plan(1);
-		t.equal('<html><head></head><body><div class="a">Nodejitsu Http Proxy</div><div>+ Trumpet</div></body></html>', out, "Response Correct");
-		t.ok(true, "Response Selector Has Been Called");
-		t.end();
-    });
-	process.exit(0);
-  });
-});
 	
 var options = {
    host: 'localhost',
@@ -92,15 +66,33 @@ var options = {
 
 var req = http.request(options, function(res) {
   res.setEncoding('utf8');
+  var out = "";
   res.on('data', function (chunk) {
     console.log('BODY: ' + chunk);
+	out+= chunk;
   });
+  
+  res.on('end', function(){
+    
+	
+	assert.equal('<html><head></head><body><div class="a">Nodejitsu Http Proxy</div><div>+ Trumpet</div></body></html>', out);
+	console.log("# Content Returned Correct");
+	process.exit(0);
+	});
+	
+  res.on('close', function(){
+	console.log("CLOSE");
+	});
 });
 
 req.on('error', function(e) {
   console.log('problem with request: ' + e.message);
 });
 
+req.on('close', function(){
+	console.log("END");
+	});
+	
 // write data to request body
 req.write('<html><head></head><body><div class="a">Nodejitsu Http Proxy</div><div class="b">&amp; Frames</div></body></html>');
 req.end();
