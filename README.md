@@ -14,11 +14,9 @@ With apologies to [connect-gzip](https://github.com/nateps/connect-gzip)
 $ npm install harmon
 ```
 
-##examples
+## examples ##
 
-##simple
-------
-### Overview
+### Overview ###
 ------------
 In this example the HTML below is returned from the remote server and parsed:
 ``` html
@@ -51,7 +49,7 @@ Browse to [localhost:8000](http://localhost:8000) and you should see:
 ![simple output](http://i.imgur.com/Gpbzt.png)
 
 ### Code
---------
+
 ``` js
 var http = require('http'),
     httpProxy = require('http-proxy');
@@ -77,7 +75,7 @@ actions.push(simpleaction);
 
 // Create a node-http-proxy configured with our harmon middleware
 httpProxy.createServer(
-  require('../').harmon(actions),
+  require('harmon')([], actions),
   9000, 'localhost'
 ).listen(8000);
 
