@@ -9,7 +9,6 @@ module.exports = function harmon(reqselectors, resselectors) {
 	{
 		var _write = res.write;
 		var reqtr = trumpet();
-		//var 	
 		for(var i = 0; i < reqselectors.length; i++){
 			reqtr.select(reqselectors[i].query, reqselectors[i].func);
 		}
