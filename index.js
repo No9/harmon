@@ -17,7 +17,7 @@ module.exports = function harmon(reqselectors, resselectors) {
 			reqtr.write(data);
 		});
 		
-    	res.write = function (data) {
+		res.write = function (data) {
 			var tr = trumpet();
 			
 			
@@ -27,9 +27,9 @@ module.exports = function harmon(reqselectors, resselectors) {
 			tr.on('data', function (buf) { 
 				_write.call(res, buf);
 			});
-				
+			
 			tr.write(data);
-    	}
+		}
 		next();
 	}
 }
