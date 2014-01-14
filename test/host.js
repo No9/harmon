@@ -15,10 +15,9 @@ simpleaction.query = '.b';
 
 // Create an function that is executed when that node is selected. Here we just replace '& frames' with '+trumpet' 
 simpleaction.func = function (node) {
-                        node.replace(function (html) {
-                            return '<div>+ Trumpet</div>';
-                        });
-                    } 
+    node.createWriteStream({ outer: true })
+        .end('<div>+ Trumpet</div>');
+} 
 
 // Add the action to the action array
 actions.push(simpleaction);
@@ -28,15 +27,15 @@ reqaction.query = '.a';
 
 // Create an function that is executed when that node is selected. Here we just replace '& frames' with '+trumpet' 
 reqaction.func = function (node) {
-                        node.replace(function (html) {
-							test("Request Test", function (t) {
-								t.plan(1);
-								t.ok(true, "Request Selector Has Been Called");
-								t.end();
-							});
-                            return '<div>Nearform Middleware</div>';
-                        });
-                    } 
+    node.replace(function (html) {
+        test("Request Test", function (t) {
+            t.plan(1);
+            t.ok(true, "Request Selector Has Been Called");
+            t.end();
+        });
+        return '<div>Nearform Middleware</div>';
+    });
+} 
 
 var reqactions = [];
 reqactions.push(reqaction);
