@@ -1,3 +1,4 @@
+var punycode = require('punycode');
 var entities = require('./entities.json');
 
 var revEntities = {};
@@ -37,10 +38,10 @@ exports.decode = function (str) {
     
     return str
         .replace(/&#(\d+);?/g, function (_, code) {
-            return String.fromCharCode(code);
+            return punycode.ucs2.encode([code]);
         })
         .replace(/&#[xX]([A-Fa-f0-9]+);?/g, function (_, hex) {
-            return String.fromCharCode(parseInt(hex, 16));
+            return punycode.ucs2.encode([parseInt(hex, 16)]);
         })
         .replace(/&([^;\W]+;?)/g, function (m, e) {
             var ee = e.replace(/;$/, '');
@@ -49,7 +50,7 @@ exports.decode = function (str) {
             ;
             
             if (typeof target === 'number') {
-                return String.fromCharCode(target);
+                return punycode.ucs2.encode([target]);
             }
             else if (typeof target === 'string') {
                 return target;

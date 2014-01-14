@@ -6,10 +6,8 @@ var simpleselect = {};
 
 simpleselect.query = '.b';
 simpleselect.func = function (node) {
-               			node.replace(function (html) {
-                			return '<div>+ Trumpet</div>';
-               			});
-            		} 
+    node.createWriteStream().end('<div>+ Trumpet</div>');
+}
 
 selects.push(simpleselect);
 

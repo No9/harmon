@@ -6,15 +6,12 @@ var simpleselect = {};
 
 simpleselect.query = 'head';
 simpleselect.func = function (node) {
-               			node.update(function (html) {
-                			var out = '<style type="text/css"> img { ';
-								out +='-webkit-transform: rotate(-90deg); ';
-								out += '-moz-transform: rotate(-90deg); ';
-								out += 'filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);}</style>';
-								out += html;
-								return out;
-               			});
-            		} 
+    var out = '<style type="text/css"> img { ';
+    out +='-webkit-transform: rotate(-90deg); ';
+    out += '-moz-transform: rotate(-90deg); ';
+    out += 'filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);}</style>';
+    node.createWriteStream({ outer: true }).end(out)
+} 
 
 selects.push(simpleselect);
 

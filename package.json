@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "http-proxy": "0.8.7",
-    "trumpet": "0.3.1"
+    "trumpet": "1.6.3"
   },
   "devDependencies" : {
         "tap" : "0.4.0"
