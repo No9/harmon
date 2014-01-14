@@ -1,4 +1,5 @@
 var test = require('tape');
+var punycode = require('punycode');
 var ent = require('../');
 
 test('amp', function (t) {
@@ -56,5 +57,13 @@ test('hex', function (t) {
             t.equal(encoded2, '&#' + i + ';&#' + i + ';');
         }
     }
+    t.end();
+});
+
+test('astral num', function (t) {
+    var a = punycode.ucs2.encode([0x1d306]);
+    var b = '&#x1d306;';
+    t.equal(ent.decode(b), a);
+    t.equal(ent.decode(b + b), a + a);
     t.end();
 });
