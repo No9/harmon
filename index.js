@@ -26,6 +26,7 @@ module.exports = function harmon(reqselectors, resselectors) {
 
 			var _write = res.write;
 			var _end = res.end;
+            var _writeHead = res.writeHead
 
 			res.write = function (data) {
 				tr.write(data);
@@ -40,6 +41,12 @@ module.exports = function harmon(reqselectors, resselectors) {
 			tr.on('data', function (buf) {
 				_write.call(res, buf);
 			});
+
+            res.writeHead = function (code, headers) {
+                res.removeHeader('Content-Length');
+                if (headers) { delete headers['content-length']; }
+                _writeHead.apply(res, arguments);
+            };
 		}
 
 		next();
