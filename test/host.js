@@ -76,7 +76,6 @@ var req = http.request(options, function(res) {
 	
 	assert.equal('<html><head></head><body><div class="a">Nodejitsu Http Proxy</div><div>+ Trumpet</div></body></html>', out);
 	console.log("# Content Returned Correct");
-	process.exit(0);
 	});
 	
   res.on('close', function(){
@@ -95,4 +94,40 @@ req.on('close', function(){
 // write data to request body
 req.write('<html><head></head><body><div class="a">Nodejitsu Http Proxy</div><div class="b">&amp; Frames</div></body></html>');
 req.end();
+
+test('Streams can change the response size', function (t) {
+    t.plan(1);
+
+    http.createServer(function (req, res) {
+        s = '<body><p>hi</p></body>';
+        res.setHeader('Content-length', '' + s.length);  // All ASCII today
+        res.end(s);
+    }).listen(9001);
+
+    var sizeChanger = {
+        query: 'p',
+        func: function (elem) {
+            ws = elem.createWriteStream({outer: true})
+            ws.end('<p>A larger paragraph</p>');
+        }
+    };
+    httpProxy.createServer(
+        require('../')(null, [sizeChanger]),
+        9001, 'localhost'
+    ).listen(8001);
+
+    http.get('http://localhost:8001', function (res) {
+        var str = '';  // yeah well it's all ASCII today.
+        res.on('data', function (data) {
+            str += data;
+            console.log("'data'", '' + data);
+        });
+        res.on('end', function () {
+            t.equal(str, '<body><p>A larger paragraph</p></body>');
+            t.end();
+        });
+    });
+});
+
+
 
