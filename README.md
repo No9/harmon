@@ -4,8 +4,6 @@ A middleware component for [node-http-proxy](https://github.com/nodejitsu/node-h
 
 [![build status](https://secure.travis-ci.org/No9/harmon.png)](http://travis-ci.org/No9/harmon)
 
-With apologies to [connect-gzip](https://github.com/nateps/connect-gzip)
-
 ![harmon](http://i.imgur.com/fpMGL.png)
 
 ##install
@@ -93,5 +91,12 @@ $ cd node_modules/harmon/examples
 $ node rotate.js
 ```
 
-See [trumpet](https://github.com/No9/node-trumpet#update) for the types of queries and functions you can 
+See [trumpet](https://github.com/No9/node-trumpet#update) for the types of queries and functions you can use.
+
+## Contributors 
+
+[fabiosantoscode](https://github.com/fabiosantoscode)
+
+[no9](https://github.com/no9)
+
 
