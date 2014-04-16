@@ -39,7 +39,7 @@ action2.func = function (node) {
 //var reqactions = [];
 actions.push(action2);
 
-connect.createServer(
+var con1 = connect.createServer(
   require('../')([], actions),
   function (req, res) {
     proxy1.web(req, res);
@@ -77,7 +77,10 @@ var req = http.request(options, function(res) {
   res.on('end', function(){
 	assert.equal('<html><head></head><body><div>Harmon Middleware</div><div>+ Trumpet</div></body></html>', out);
 	console.log("# Content Returned Correct");
+        con1.close();
         server1.close();
+        proxy1 = null;
+        //proxy1.close();
 	});
 	
   res.on('close', function(){
@@ -115,7 +118,7 @@ test('Streams can change the response size', function (t) {
         }
     
     
-    connect.createServer(
+    var con2 = connect.createServer(
       require('../')([], [sizeChanger]),
       function (req, res) {
         proxy.web(req, res);
@@ -140,6 +143,7 @@ var proxy = httpProxy.createProxyServer({
         res.on('end', function () {
             t.equal(str, '<body><p>A larger paragraph</p></body>');
             server2.close();
+            con2.close();
             t.end();
 	    //console.log(proxy.web());
         });
