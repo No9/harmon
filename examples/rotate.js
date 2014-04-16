@@ -1,5 +1,8 @@
 var http = require('http'),
-    httpProxy = require('http-proxy');
+    httpProxy = require('http-proxy'),
+    colors = require('colors'),
+    http = require('http'),
+    connect = require('connect');
 
 var selects = [];
 var simpleselect = {};
@@ -15,10 +18,19 @@ simpleselect.func = function (node) {
 
 selects.push(simpleselect);
 
-httpProxy.createServer(
+//
+// Basic Connect App
+//
+connect.createServer(
   require('../')([], selects),
-  9000, 'localhost'
+  function (req, res) {
+    proxy.web(req, res);
+  }
 ).listen(8000);
+
+var proxy = httpProxy.createProxyServer({
+   target: 'http://localhost:9000'
+})
 
 http.createServer(function (req, res) {
   res.writeHead(200, { 'Content-Type': 'text/html' });

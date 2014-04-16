@@ -52,39 +52,39 @@ Browse to [localhost:8000](http://localhost:8000) and you should see:
 
 ``` js
 var http = require('http'),
+    connect = require('connect'),
     httpProxy = require('http-proxy');
 
-// Create an array of selects that harmon will process. 
-var actions = [];
 
-// Create a simple action
-var simpleaction = {};
+var selects = [];
+var simpleselect = {};
 
-// Select a node by its class name. You can also select by tag e.g. 'div'
-simpleaction.query = '.b';
+simpleselect.query = '.b';
+simpleselect.func = function (node) {
+    node.createWriteStream().end('<div>+ Trumpet</div>');
+}
 
-// Create an function that is executed when that node is selected. Here we just replace '& frames' with '+trumpet' 
-simpleaction.func = function (node) {
-               			node.replace(function (html) {
-                			return '<div>+ Trumpet</div>';
-               			});
-            		} 
+selects.push(simpleselect);
 
-// Add the action to the action array
-actions.push(simpleaction);
-
-// Create a node-http-proxy configured with our harmon middleware
-httpProxy.createServer(
-  require('harmon')([], actions),
-  9000, 'localhost'
+//
+// Basic Connect App
+//
+connect.createServer(
+  require('harmon')([], selects),
+  function (req, res) {
+    proxy.web(req, res);
+  }
 ).listen(8000);
 
-// Create a simple web server for the proxy to send requests to and manipulate the data from
+var proxy = httpProxy.createProxyServer({
+   target: 'http://localhost:9000'
+})
+
 http.createServer(function (req, res) {
   res.writeHead(200, { 'Content-Type': 'text/html' });
   res.write('<html><head></head><body><div class="a">Nodejitsu Http Proxy</div><div class="b">&amp; Frames</div></body></html>');
   res.end();
-}).listen(9000); 
+}).listen(9000);
 ```
 or 
 See how images could be rotated.
@@ -94,16 +94,4 @@ $ node rotate.js
 ```
 
 See [trumpet](https://github.com/No9/node-trumpet#update) for the types of queries and functions you can 
-
-## License
-
-(The MIT License)
-
-Copyright (c) 2012 Anthony Whalley
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 

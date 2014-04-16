@@ -2,7 +2,7 @@ var test = require("tap").test;
 var assert = require('assert');
 var http = require('http');
 var httpProxy = require('http-proxy');
-
+var connect = require('connect');
 
 // Create an array of selects that harmon will process. 
 var actions = [];
@@ -22,28 +22,33 @@ simpleaction.func = function (node) {
 // Add the action to the action array
 actions.push(simpleaction);
 
-var reqaction = {};
-reqaction.query = '.a';
+var action2 = {};
+action2.query = '.a';
 
 // Create an function that is executed when that node is selected. Here we just replace '& frames' with '+trumpet' 
-reqaction.func = function (node) {
+action2.func = function (node) {
     test("Request Test", function (t) {
         t.plan(1);
         t.ok(true, "Request Selector Has Been Called");
         t.end();
     });
-    node.createWrteStream.end('<div>Nearform Middleware</div>');
+    node.createWriteStream({outer : true }).end('<div>Harmon Middleware</div>');
 } 
 
-var reqactions = [];
-reqactions.push(reqaction);
+//Turning this off for now
+//var reqactions = [];
+actions.push(action2);
 
-
-// Create a node-http-proxy configured with our harmon middleware
-var proxy1 = httpProxy.createServer(
-  require('../')(reqactions, actions),
-  9000, 'localhost'
+connect.createServer(
+  require('../')([], actions),
+  function (req, res) {
+    proxy1.web(req, res);
+  }
 ).listen(8000);
+
+var proxy1 = httpProxy.createProxyServer({
+   target: 'http://localhost:9000'
+})
 
 // Create a simple web server for the proxy to send requests to and manipulate the data from
 var server1 = http.createServer(function (req, res) {
@@ -70,10 +75,9 @@ var req = http.request(options, function(res) {
   });
   
   res.on('end', function(){
-	assert.equal('<html><head></head><body><div class="a">Nodejitsu Http Proxy</div><div>+ Trumpet</div></body></html>', out);
+	assert.equal('<html><head></head><body><div>Harmon Middleware</div><div>+ Trumpet</div></body></html>', out);
 	console.log("# Content Returned Correct");
-    server1.close();
-    proxy1.close();
+        server1.close();
 	});
 	
   res.on('close', function(){
@@ -102,18 +106,31 @@ test('Streams can change the response size', function (t) {
         res.end(s);
     }).listen(9001);
 
-    var sizeChanger = {
-        query: 'p',
-        func: function (elem) {
+    var sizeChanger = {} ;
+      
+        sizeChanger.query = 'p';
+        sizeChanger.func = function (elem) {
             ws = elem.createWriteStream({outer: true})
             ws.end('<p>A larger paragraph</p>');
         }
-    };
+    
+    
+    connect.createServer(
+      require('../')([], [sizeChanger]),
+      function (req, res) {
+        proxy.web(req, res);
+      }
+    ).listen(8001);
+
+var proxy = httpProxy.createProxyServer({
+   target: 'http://localhost:9001'
+})
+/*
     var proxy2 = httpProxy.createServer(
         require('../')(null, [sizeChanger]),
         9001, 'localhost'
     ).listen(8001);
-
+*/
     http.get('http://localhost:8001', function (res) {
         var str = '';  // yeah well it's all ASCII today.
         res.on('data', function (data) {
@@ -122,9 +139,9 @@ test('Streams can change the response size', function (t) {
         });
         res.on('end', function () {
             t.equal(str, '<body><p>A larger paragraph</p></body>');
-            proxy2.close();
             server2.close();
             t.end();
+	    //console.log(proxy.web());
         });
     });
 });
