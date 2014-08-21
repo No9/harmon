@@ -104,7 +104,7 @@ test('Streams can change the response size', function (t) {
     t.plan(1);
 
     var server2 = http.createServer(function (req, res) {
-        s = '<body><p>hi</p></body>';
+        var s = '<body><p>hi</p></body>';
         res.setHeader('Content-length', '' + s.length);  // All ASCII today
         res.end(s);
     }).listen(9001);
