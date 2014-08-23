@@ -99,4 +99,6 @@ See [trumpet](https://github.com/No9/node-trumpet#update) for the types of queri
 
 [no9](https://github.com/no9)
 
+[smazurov](https://github.com/smazurov)
+
 
