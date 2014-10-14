@@ -16,16 +16,22 @@ selects.push(simpleselect);
 //
 // Basic Connect App
 //
-connect.createServer(
-  require('../')([], selects),
-  function (req, res) {
-    proxy.web(req, res);
-  }
-).listen(8000);
+var app = connect();
 
 var proxy = httpProxy.createProxyServer({
    target: 'http://localhost:9000'
 })
+
+
+app.use(require('../')([], selects));
+
+app.use(
+  function (req, res) {
+    proxy.web(req, res);
+  }
+);
+
+http.createServer(app).listen(8000);
 
 http.createServer(function (req, res) {
   res.writeHead(200, { 'Content-Type': 'text/html' });

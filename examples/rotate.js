@@ -21,23 +21,29 @@ selects.push(simpleselect);
 //
 // Basic Connect App
 //
-connect.createServer(
-  require('../')([], selects),
-  function (req, res) {
-    proxy.web(req, res);
-  }
-).listen(8000);
+
+var app = connect();
 
 var proxy = httpProxy.createProxyServer({
    target: 'http://localhost:9000'
 })
 
+app.use(require('../')([], selects));
+app.use(function (req, res) {
+         proxy.web(req, res);
+      })
+
+
+
+http.createServer(app).listen(8000);
+
+
 http.createServer(function (req, res) {
   res.writeHead(200, { 'Content-Type': 'text/html' });
-  output = '<html><head><script>'
-  output += 'window.onload = function () {'
-  output += 'document.getElementById("message").innerHTML = "The piece of javascript also inside the head tag wasn\'t touched :)";';
-  output +=	'}</script></head><body><h3>A simple example of injecting some css to rotate an image into a page before it is rendered.</h3>'
-  output += '<image src="http://i.imgur.com/fpMGL.png" /><div id="message"></div></body></html>';
+  var output =  '<html><head><script>'
+      output += 'window.onload = function () {'
+      output += 'document.getElementById("message").innerHTML = "The piece of javascript also inside the head tag wasn\'t touched :)";';
+      output += '}</script></head><body><h3>A simple example of injecting some css to rotate an image into a page before it is rendered.</h3>'
+      output += '<image src="http://i.imgur.com/fpMGL.png" /><div id="message"></div></body></html>';
   res.end(output);
 }).listen(9000); 

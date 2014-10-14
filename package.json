@@ -8,7 +8,7 @@
     "streaming",
     "html"
   ],
-  "version": "0.3.1",
+  "version": "1.0.0",
   "author": {
     "name": "Anton Whalley",
     "email": "anton.whalley@vodafone.ie"
@@ -21,13 +21,13 @@
     "url": "https://github.com/No9/harmon/issues"
   },
   "dependencies": {
-    "trumpet": "1.6.5"
+    "trumpet": "1.7.0"
   },
   "devDependencies": {
-    "tap": "0.4.0",
     "colors": "^0.6.2",
-    "connect": "^2.14.4",
-    "http-proxy": "^1.1.2"
+    "connect": "^3.2.0",
+    "http-proxy": "^1.1.2",
+    "tap": "0.4.0"
   },
   "scripts": {
     "test": "node test/host.js"

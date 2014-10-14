@@ -39,12 +39,14 @@ action2.func = function (node) {
 //var reqactions = [];
 actions.push(action2);
 
-var con1 = connect.createServer(
-  require('../')([], actions),
-  function (req, res) {
-    proxy1.web(req, res);
-  }
-).listen(8000);
+
+var con1 = connect();
+con1.use(require('../')([], actions));
+con1.use(function (req, res) {
+            proxy1.web(req, res);
+         })
+
+var consvr1 = http.createServer(con1).listen(8000);
 
 var proxy1 = httpProxy.createProxyServer({
    target: 'http://localhost:9000'
@@ -57,8 +59,6 @@ var server1 = http.createServer(function (req, res) {
   res.end();
 }).listen(9000); 
 
-
-	
 var options = {
    host: 'localhost',
    port: 8000,
@@ -71,31 +71,30 @@ var req = http.request(options, function(res) {
   var out = "";
   res.on('data', function (chunk) {
     console.log('BODY: ' + chunk);
-	out+= chunk;
+    out+= chunk;
   });
   
   res.on('end', function(){
-	assert.equal('<html><head></head><body><div>Harmon Middleware</div><div>+ Trumpet</div></body></html>', out);
-	console.log("# Content Returned Correct");
-        con1.close();
-        server1.close();
-        proxy1 = null;
-        //proxy1.close();
-	});
-	
+      assert.equal('<html><head></head><body><div>Harmon Middleware</div><div>+ Trumpet</div></body></html>', out);
+      console.log("# Content Returned Correct");
+      consvr1.close();
+      server1.close();
+      proxy1 = null;
+  });
+      
   res.on('close', function(){
-	console.log("CLOSE");
-	});
+      console.log("CLOSE");
+  });
 });
 
 req.on('error', function(e) {
-  console.log('problem with request: ' + e.message);
+    console.log('problem with request: ' + e.message);
 });
 
 req.on('close', function(){
-	console.log("END");
-	});
-	
+    console.log("END");
+});
+
 // write data to request body
 req.write('<html><head></head><body><div class="a">Nodejitsu Http Proxy</div><div class="b">&amp; Frames</div></body></html>');
 req.end();
@@ -118,12 +117,14 @@ test('Streams can change the response size', function (t) {
         }
     
     
-    var con2 = connect.createServer(
-      require('../')([], [sizeChanger]),
-      function (req, res) {
+    var con2 = connect();
+    con2.use(require('../')([], [sizeChanger]));
+    con2.use(function (req, res) {
         proxy.web(req, res);
       }
-    ).listen(8001);
+    )
+   
+   var consvr2 = http.createServer(con2).listen(8001);
 
 var proxy = httpProxy.createProxyServer({
    target: 'http://localhost:9001'
@@ -143,9 +144,8 @@ var proxy = httpProxy.createProxyServer({
         res.on('end', function () {
             t.equal(str, '<body><p>A larger paragraph</p></body>');
             server2.close();
-            con2.close();
+            consvr2.close();
             t.end();
-	    //console.log(proxy.web());
         });
     });
 });
