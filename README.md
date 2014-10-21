@@ -74,6 +74,8 @@ var http = require('http'),
               target: 'http://localhost:9000'
         })
 
+        //Additional true parameter can be used to ignore js and css files. 
+        //app.use(require('../')([], selects), true);
 
         app.use(require('../')([], selects));
 
