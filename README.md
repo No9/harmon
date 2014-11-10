@@ -98,7 +98,7 @@ $ cd node_modules/harmon/examples
 $ node rotate.js
 ```
 
-See [trumpet](https://github.com/No9/node-trumpet#update) for the types of queries and functions you can use.
+See [trumpet](https://github.com/substack/node-trumpet) for the types of queries and functions you can use.
 
 ## Contributors 
 
