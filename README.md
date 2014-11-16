@@ -1,15 +1,11 @@
-#harmon
+#harmon-binary
 
-A middleware component for [node-http-proxy](https://github.com/nodejitsu/node-http-proxy) using [trumpet](https://github.com/substack/node-trumpet) to parse and transform the response from the proxied server.
-
-[![build status](https://secure.travis-ci.org/No9/harmon.png)](http://travis-ci.org/No9/harmon)
-
-![harmon](http://i.imgur.com/fpMGL.png)
+A fork of [harmon](https://github.com/No9/harmon) that works with proxies that must handle both HTML and binary content in responses. This fork also enables trumpet callbacks to access the request and response.
 
 ##install
 
 ```
-$ npm install harmon
+$ npm install harmon-binary
 ```
 
 ## examples ##
@@ -39,7 +35,7 @@ And is replaced with:
 ----------- 
 from your project root:
 ```
-$ cd node_modules/harmon/examples
+$ cd node_modules/harmon-binary/examples
 $ node simple.js
 ```
 Browse to [localhost:8000](http://localhost:8000) and you should see:
@@ -52,14 +48,15 @@ Browse to [localhost:8000](http://localhost:8000) and you should see:
 
 var http = require('http'),
     connect = require('connect'),
-    httpProxy = require('http-proxy');
+    httpProxy = require('http-proxy'),
+    harmonBin = require('harmon-binary');
 
 
     var selects = [];
     var simpleselect = {};
 
         simpleselect.query = '.b';
-        simpleselect.func = function (node) {
+        simpleselect.func = function (node, req, res) {
            node.createWriteStream().end('<div>+ Trumpet</div>');
         }
 
@@ -74,10 +71,13 @@ var http = require('http'),
               target: 'http://localhost:9000'
         })
 
-        //Additional true parameter can be used to ignore js and css files. 
-        //app.use(require('../')([], selects), true);
-
-        app.use(require('../')([], selects));
+        /* The first parameter makes it possible to use trumpet on the
+         * incoming request body (this tends to be rare).
+         *
+         * The second parameter applies trumpet to the response body,
+         * which tends to be the desired target.
+         */
+        app.use(harmonBin([], selects));
 
         app.use(function (req, res) {
                    proxy.web(req, res);
@@ -94,7 +94,7 @@ var http = require('http'),
 or 
 See how images could be rotated.
 ```
-$ cd node_modules/harmon/examples
+$ cd node_modules/harmon-binary/examples
 $ node rotate.js
 ```
 
@@ -108,4 +108,5 @@ See [trumpet](https://github.com/substack/node-trumpet) for the types of queries
 
 [smazurov](https://github.com/smazurov)
 
+[GuyPaddock](https://github.com/GuyPaddock)
 
