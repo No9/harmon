@@ -1,10 +1,10 @@
 var trumpet = require('trumpet');
 
 module.exports = function harmonBinary(reqSelectors, resSelectors) {
-	var _reqSelectors = reqSelectors || [];
-	var _resSelectors = resSelectors || [];
+  var _reqSelectors = reqSelectors || [];
+  var _resSelectors = resSelectors || [];
 
-	function prepareRequestSelectors(req, res) {
+  function prepareRequestSelectors(req, res) {
     var tr = trumpet();
   
     prepareSelectors(tr, _reqSelectors, req, res);
@@ -12,9 +12,9 @@ module.exports = function harmonBinary(reqSelectors, resSelectors) {
     req.on('data', function(data) {
       tr.write(data);
     });
-	}
-	
-	function prepareResponseSelectors(req, res) {
+  }
+    
+  function prepareResponseSelectors(req, res) {
     var tr          = trumpet();
     var _write      = res.write;
     var _end        = res.end;
@@ -67,9 +67,9 @@ module.exports = function harmonBinary(reqSelectors, resSelectors) {
     tr.on('end', function () {
       _end.call(res);
     });
-	}
+  }
 
-	function prepareSelectors(tr, selectors, req, res) {
+  function prepareSelectors(tr, selectors, req, res) {
     for (var i = 0; i < selectors.length; i++) {
       var callback         = selectors[i].func;
       var callbackInvoker  = function(element) {
@@ -79,16 +79,16 @@ module.exports = function harmonBinary(reqSelectors, resSelectors) {
       tr.selectAll(selectors[i].query, callbackInvoker);
     }
   }
-	
-	return function harmonBinary(req, res, next) {
-		if (_reqSelectors.length) {
-		  prepareRequestSelectors(req, res);
-		}
+    
+  return function harmonBinary(req, res, next) {
+    if (_reqSelectors.length) {
+      prepareRequestSelectors(req, res);
+    }
 
-		if (_resSelectors.length) {
-		  prepareResponseSelectors(req, res);
-		}
-		
-		next();
-	};
+    if (_resSelectors.length) {
+      prepareResponseSelectors(req, res);
+    }
+    
+    next();
+  };
 };
