@@ -1,6 +1,8 @@
 #harmon-binary
 
-A fork of [harmon](https://github.com/No9/harmon) that works with proxies that must handle both HTML and binary content in responses. This fork also enables trumpet callbacks to access the request and response.
+A fork of [harmon](https://github.com/No9/harmon) that works with proxies that must handle both HTML and binary content in responses.
+
+This fork also gives trumpet callbacks the ability to access both the request and response.
 
 ##install
 
