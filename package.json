@@ -1,6 +1,6 @@
 {
-  "name": "harmon",
-  "description": "A piece of middleware for node-http-proxy that allows you to modify the remote service response with trumpet",
+  "name": "harmon-binary",
+  "description": "A fork of the harmon middleware for node-http-proxy that allows you to modify the remote service response with trumpet, in a way that safely handles binary responses as well.",
   "tags": [
     "http-proxy",
     "trumpet",
@@ -10,15 +10,15 @@
   ],
   "version": "1.1.0",
   "author": {
-    "name": "Anton Whalley",
-    "email": "anton@venshare.com"
+    "name": "Guy Paddock",
+    "email": "guy.paddock@redbottledesign.com"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/No9/harmon.git"
+    "url": "https://github.com/GuyPaddock/harmon-binary.git"
   },
   "bugs": {
-    "url": "https://github.com/No9/harmon/issues"
+    "url": "https://github.com/GuyPaddock/harmon-binary/issues"
   },
   "dependencies": {
     "trumpet": "1.7.0"
