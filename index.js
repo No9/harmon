@@ -31,7 +31,7 @@ module.exports = function harmonBinary(reqSelectors, resSelectors) {
       /* Sniff out the content-type header.
        * If the response is HTML, we're safe to modify it.
        */
-      if (contentType.indexOf('text/html') == 0) {
+      if ((typeof contentType != 'undefined') && (contentType.indexOf('text/html') == 0)) {
         res.isHtml = true;
 
         // Strip off the content length since it will change.
