@@ -72,13 +72,13 @@ module.exports = function harmonBinary(reqSelectors, resSelectors, htmlOnly) {
 
   function prepareSelectors(tr, selectors, req, res) {
     for (var i = 0; i < selectors.length; i++) {
-      (function (callback) {
+      (function (callback, req, res) {
         var callbackInvoker  = function(element) {
           callback(element, req, res);
         }; 
         
         tr.selectAll(selectors[i].query, callbackInvoker);
-      })(selectors[i].func);
+      })(selectors[i].func, req, res);
     }
   }
     
