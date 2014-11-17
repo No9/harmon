@@ -3,7 +3,7 @@ var trumpet = require('trumpet');
 module.exports = function harmonBinary(reqSelectors, resSelectors, htmlOnly) {
   var _reqSelectors = reqSelectors || [];
   var _resSelectors = resSelectors || [];
-  var _htmlOnly     = htmlOnly || false;
+  var _htmlOnly     = (typeof htmlOnly == 'undefined') ? false : htmlOnly;
 
   function prepareRequestSelectors(req, res) {
     var tr = trumpet();
