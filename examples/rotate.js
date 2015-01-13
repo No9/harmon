@@ -1,7 +1,6 @@
 var http = require('http'),
     httpProxy = require('http-proxy'),
     colors = require('colors'),
-    http = require('http'),
     connect = require('connect');
 
 var selects = [];
