@@ -1,4 +1,5 @@
 var http = require('http'),
+    https = require('https'),
     connect = require('connect'),
     httpProxy = require('http-proxy');
 
@@ -44,7 +45,9 @@ selects.push(simpleselect);
 var app = connect();
 
 var proxy = httpProxy.createProxyServer({
-   target: 'http://nodejs.org'
+   target: 'https://nodejs.org',
+   agent  : https.globalAgent, 
+   headers:{ host: 'nodejs.org' }
 })
 
 
