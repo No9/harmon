@@ -12,7 +12,7 @@ simpleselect.func = function (node) {
     out +='-webkit-transform: rotate(-90deg); ';
     out += '-moz-transform: rotate(-90deg); ';
     out += 'filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);}</style>';
-    node.createWriteStream({ outer: true }).end(out)
+    node.createWriteStream({ outer: false }).end(out)
 } 
 
 selects.push(simpleselect);
