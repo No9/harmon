@@ -4,7 +4,7 @@ var zlib = require('zlib');
 module.exports = function harmonBinary(reqSelectors, resSelectors, htmlOnly) {
   var _reqSelectors = reqSelectors || [];
   var _resSelectors = resSelectors || [];
-  var _htmlOnly     = (typeof htmlOnly == 'undefined') ? false : htmlOnly;  
+  var _htmlOnly     = (typeof htmlOnly == 'undefined') ? false : htmlOnly;
 
   function prepareRequestSelectors(req, res) {
     var tr = trumpet();
@@ -21,7 +21,7 @@ module.exports = function harmonBinary(reqSelectors, resSelectors, htmlOnly) {
     var _write      = res.write;
     var _end        = res.end;
     var _writeHead  = res.writeHead;
-	var gunzip		= zlib.Gunzip();
+    var gunzip		= zlib.Gunzip();
 
     prepareSelectors(tr, _resSelectors, req, res);
 
