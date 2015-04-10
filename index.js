@@ -21,7 +21,7 @@ module.exports = function harmonBinary(reqSelectors, resSelectors, htmlOnly) {
     var _write      = res.write;
     var _end        = res.end;
     var _writeHead  = res.writeHead;
-    var gunzip		= zlib.Gunzip();
+    var gunzip      = zlib.Gunzip();
 
     prepareSelectors(tr, _resSelectors, req, res);
 
