@@ -125,7 +125,7 @@ test('Streams can change the response size', function (t) {
         proxy.web(req, res);
       }
     )
-  
+   
     var consvr2 = http.createServer(con2).listen(8001);
 
     var proxy = httpProxy.createProxyServer({
@@ -188,7 +188,7 @@ test('Only text/html should be altered.', function (t) {
     })
 
     http.get('http://localhost:8001', function (res) {
-        var str = ''; // yeah well it's all ASCII today.
+        var str = '';  // yeah well it's all ASCII today.
 
         res.on('data', function (data) {
             console.log("'data'", data + '');
