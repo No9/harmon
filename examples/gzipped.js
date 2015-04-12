@@ -14,6 +14,14 @@ simpleselect.func = function (node) {
 
 selects.push(simpleselect);
 
+// Another select for Content-Encoding displaying
+selects.push({
+  query: '.c',
+  func: function(node){
+    node.createWriteStream().end('No Content-Encoding');
+  }
+});
+
 //
 // Basic Connect App
 //
@@ -60,7 +68,7 @@ http.createServer(function (req, res) {
     'Content-Type': 'text/html',
     'Content-Encoding': 'gzip'
   });
-  res.write('<html><head></head><body><div class="a">Nodejitsu Http Proxy</div><div class="b">&amp; Frames</div><div>Content-Encoding: gzip</div></body></html>');
+  res.write('<html><head></head><body><div class="a">Nodejitsu Http Proxy</div><div class="b">&amp; Frames</div><div class="c">Content-Encoding: gzip</div></body></html>');
   res.end();
   
 }).listen(9000);
