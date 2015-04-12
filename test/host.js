@@ -125,7 +125,7 @@ test('Streams can change the response size', function (t) {
         proxy.web(req, res);
       }
     )
-    
+  
     var consvr2 = http.createServer(con2).listen(8001);
 
     var proxy = httpProxy.createProxyServer({
@@ -138,7 +138,7 @@ test('Streams can change the response size', function (t) {
     ).listen(8001);
 */
     http.get('http://localhost:8001', function (res) {
-        var str = ''; // yeah well it's all ASCII today.
+        var str = '';  // yeah well it's all ASCII today.
 
         res.on('data', function (data) {
             console.log("'data'", data + '');
@@ -150,8 +150,8 @@ test('Streams can change the response size', function (t) {
             server2.close();
             consvr2.close();
             t.end();
-       });
-  });
+        });
+    });
 });
 
 test('Only text/html should be altered.', function (t) {
@@ -160,11 +160,11 @@ test('Only text/html should be altered.', function (t) {
     var server2 = http.createServer(function (req, res) {
         var s = '<body><p>hi</p></body>';
         res.setHeader('Content-Type', 'text/plain');
-        res.setHeader('Content-length', '' + s.length); // All ASCII today
+        res.setHeader('Content-length', '' + s.length);  // All ASCII today
         res.end(s);
     }).listen(9001);
 
-    var ignoredSelector = {};
+    var ignoredSelector = {} ;
 
     ignoredSelector.query = 'p';
     ignoredSelector.func = function (elem) {
@@ -172,35 +172,36 @@ test('Only text/html should be altered.', function (t) {
       ws.end('<p>A larger paragraph</p>');
     }
 
-  var con2 = connect();
+    var con2 = connect();
 
-  con2.use(require('../')([], [ignoredSelector], true));
+    con2.use(require('../')([], [ignoredSelector], true));
 
-  con2.use(function (req, res) {
-    proxy2.web(req, res);
-  })
+    con2.use(function (req, res) {
+        proxy2.web(req, res);
+      }
+    )
 
-  var consvr2 = http.createServer(con2).listen(8001);
+    var consvr2 = http.createServer(con2).listen(8001);
 
-  var proxy2 = httpProxy.createProxyServer({
-    target: 'http://localhost:9001'
-  })
+    var proxy2 = httpProxy.createProxyServer({
+        target: 'http://localhost:9001'
+    })
 
-  http.get('http://localhost:8001', function (res) {
-    var str = ''; // yeah well it's all ASCII today.
+    http.get('http://localhost:8001', function (res) {
+        var str = ''; // yeah well it's all ASCII today.
 
-    res.on('data', function (data) {
-      console.log("'data'", data + '');
-      str += data;
-    });
+        res.on('data', function (data) {
+            console.log("'data'", data + '');
+            str += data;
+        });
 
-    res.on('end', function () {
-      // Should not be modified since server indicated that content type is not HTML
-      t.equal(str, '<body><p>hi</p></body>');
-      server2.close();
-      consvr2.close();
-      t.end();
-    });
+        res.on('end', function () {
+            // Should not be modified since server indicated that content type is not HTML
+            t.equal(str, '<body><p>hi</p></body>');
+            server2.close();
+            consvr2.close();
+            t.end();
+        });
   });
 });
 
