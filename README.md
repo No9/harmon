@@ -95,7 +95,6 @@ or
 See how images could be rotated.
 ```
 $ cd node_modules/harmon/examples
-$ node rotate.js
 ```
 
 See [trumpet](https://github.com/substack/node-trumpet) for the types of queries and functions you can use.
@@ -107,5 +106,7 @@ See [trumpet](https://github.com/substack/node-trumpet) for the types of queries
 [no9](https://github.com/no9)
 
 [smazurov](https://github.com/smazurov)
+
+[sergiator](https://github.com/sergiator)
 
 
