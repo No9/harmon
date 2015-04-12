@@ -4,24 +4,24 @@ var zlib = require('zlib');
 module.exports = function harmonBinary(reqSelectors, resSelectors, htmlOnly) {
   var _reqSelectors = reqSelectors || [];
   var _resSelectors = resSelectors || [];
-  var _htmlOnly = (typeof htmlOnly == 'undefined') ? false : htmlOnly;
+  var _htmlOnly     = (typeof htmlOnly == 'undefined') ? false : htmlOnly;
 
   function prepareRequestSelectors(req, res) {
     var tr = trumpet();
 
     prepareSelectors(tr, _reqSelectors, req, res);
 
-    req.on('data', function (data) {
+    req.on('data', function(data) {
       tr.write(data);
     });
   }
 
   function prepareResponseSelectors(req, res) {
-    var tr = trumpet();
-    var _write = res.write;
-    var _end = res.end;
-    var _writeHead = res.writeHead;
-    var gunzip = zlib.Gunzip();
+    var tr          = trumpet();
+    var _write      = res.write;
+    var _end        = res.end;
+    var _writeHead  = res.writeHead;
+    var gunzip      = zlib.Gunzip();
 
     prepareSelectors(tr, _resSelectors, req, res);
 
@@ -107,7 +107,7 @@ module.exports = function harmonBinary(reqSelectors, resSelectors, htmlOnly) {
   function prepareSelectors(tr, selectors, req, res) {
     for (var i = 0; i < selectors.length; i++) {
       (function (callback, req, res) {
-        var callbackInvoker = function (element) {
+        var callbackInvoker  = function(element) {
           callback(element, req, res);
         };
 
@@ -123,7 +123,7 @@ module.exports = function harmonBinary(reqSelectors, resSelectors, htmlOnly) {
       var lowercaseUrl = req.url.toLowerCase();
 
       if ((lowercaseUrl.indexOf('.js', req.url.length - 3) !== -1) ||
-        (lowercaseUrl.indexOf('.css', req.url.length - 4) !== -1)) {
+          (lowercaseUrl.indexOf('.css', req.url.length - 4) !== -1)) {
         ignore = true;
       }
     }
