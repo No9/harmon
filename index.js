@@ -1,4 +1,5 @@
 var trumpet = require('trumpet');
+var zlib = require('zlib');
 
 module.exports = function harmonBinary(reqSelectors, resSelectors, htmlOnly) {
   var _reqSelectors = reqSelectors || [];
@@ -20,15 +21,36 @@ module.exports = function harmonBinary(reqSelectors, resSelectors, htmlOnly) {
     var _write      = res.write;
     var _end        = res.end;
     var _writeHead  = res.writeHead;
+    var gunzip      = zlib.Gunzip();
 
     prepareSelectors(tr, _resSelectors, req, res);
 
     // Assume response is binary by default
     res.isHtml = false;
     
+    // Assume response is uncompressed by default
+    res.isGziped = false;
+
     res.writeHead = function (code, headers) {
       var contentType = this.getHeader('content-type');
       
+      var contentEncoding = this.getHeader('content-encoding');
+
+
+      /* Sniff out the content-type header.
+       * If the response is Gziped, we're have to gunzip content before and ungzip content after.
+       */
+      if (contentEncoding && contentEncoding.toLowerCase() == 'gzip') {
+        res.isGziped = true;
+
+        // Strip off the content encoding since it will change.
+        res.removeHeader('Content-Encoding');
+
+        if (headers) {
+          delete headers['content-encoding'];
+        }
+      }
+
       /* Sniff out the content-type header.
        * If the response is HTML, we're safe to modify it.
        */
@@ -49,10 +71,12 @@ module.exports = function harmonBinary(reqSelectors, resSelectors, htmlOnly) {
     res.write = function (data, encoding) {
       // Only run data through trumpet if we have HTML
       if (res.isHtml) {
-        tr.write(data, encoding);
-      }
-      
-      else {
+        if (res.isGziped) {
+          gunzip.write(data);
+        } else {
+          tr.write(data, encoding);
+        }
+      } else {
         _write.apply(res, arguments);
       }
     };
@@ -61,9 +85,21 @@ module.exports = function harmonBinary(reqSelectors, resSelectors, htmlOnly) {
       _write.call(res, buf);
     });
 
+    gunzip.on('data', function (buf) {
+      tr.write(buf);
+    });
+
     res.end = function (data, encoding) {
-      tr.end(data, encoding);
+      if (res.isGziped) {
+        gunzip.end(data);
+      } else {
+        tr.end(data, encoding);
+      }
     };
+
+    gunzip.on('end', function (data) {
+      tr.end(data);
+    });
 
     tr.on('end', function () {
       _end.call(res);

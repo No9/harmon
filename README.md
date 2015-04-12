@@ -108,4 +108,5 @@ See [trumpet](https://github.com/substack/node-trumpet) for the types of queries
 
 [smazurov](https://github.com/smazurov)
 
+[sergiator](https://github.com/sergiator)
 

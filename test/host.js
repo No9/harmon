@@ -3,6 +3,7 @@ var assert = require('assert');
 var http = require('http');
 var httpProxy = require('http-proxy');
 var connect = require('connect');
+var zlib = require('zlib');
 
 // Create an array of selects that harmon will process. 
 var actions = [];
@@ -201,5 +202,80 @@ test('Only text/html should be altered.', function (t) {
             consvr2.close();
             t.end();
         });
+  });
+});
+
+test('Gzipped content should be affected.', function (t) {
+  t.plan(2);
+  var initialString = '<html><head></head><body><div class="b3">Gzipped is NOT affected</div></body></html>';
+  var expectedString = '<html><head></head><body><div class="b3">Gzipped IS affected</div></body></html>';
+  // Server that returns test gziped response
+  var server3 = http.createServer(function (req, res) {
+    var gzip = zlib.createGzip();
+    res.setHeader('Content-Type', 'text/html');
+    res.setHeader('Content-Encoding', 'gzip');
+    gzip.on('data', function (buf) {
+      res.write(buf);
     });
+    gzip.on('end', function () {
+      res.end();
+    });
+    gzip.write(initialString);
+    gzip.end();
+
+  }).listen(9001);
+  // Proxy-Server
+  var proxy3 = httpProxy.createProxyServer({
+    target: 'http://localhost:9001'
+  })
+
+  var selector3 = {
+    query: '.b3',
+    func: function (node) {
+      node.createWriteStream().end('Gzipped IS affected');
+    }
+  };
+
+  var con3 = connect();
+  con3.use(require('../')([], [selector3]));
+  con3.use(function (req, res) {
+    proxy3.web(req, res);
+  })
+
+  // Proxied Server
+  var consvr3 = http.createServer(con3).listen(8001);
+  
+  // Check proxied response
+  var testProxied = function(){
+    http.get('http://localhost:8001', function (res) {
+      var str = ''; 
+      res.on('data', function (data) {
+        str += data;
+      });
+      res.on('end', function () {
+        // response string should be equals to expected
+        t.equals(str, expectedString);
+        t.end();
+        consvr3.close();
+        server3.close();
+        proxy3 = null;
+      });
+    });
+  }
+  // Check direct response
+  var testDirect = function(callback){
+    http.get('http://localhost:9001', function (res) {
+      var str = ''; 
+      res.on('data', function (data) {
+        str += data;
+      });
+      res.on('end', function () {
+        // initial string should be modified by gzip
+        t.notEquals(initialString, str);
+        callback();
+      });
+    });
+  }
+  // Run tests
+  testDirect(testProxied);
 });
