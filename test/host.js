@@ -256,6 +256,9 @@ test('Gzipped content should be affected.', function (t) {
         // response string should be equals to expected
         t.equals(str, expectedString);
         t.end();
+        consvr3.close();
+        server3.close();
+        proxy3 = null;
       });
     });
   }
