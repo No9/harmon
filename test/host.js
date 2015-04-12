@@ -34,7 +34,7 @@ action2.func = function (node) {
         t.end();
     });
     node.createWriteStream({outer : true }).end('<div>Harmon Middleware</div>');
-}
+} 
 
 //Turning this off for now
 //var reqactions = [];
@@ -55,9 +55,7 @@ var proxy1 = httpProxy.createProxyServer({
 
 // Create a simple web server for the proxy to send requests to and manipulate the data from
 var server1 = http.createServer(function (req, res) {
-  res.writeHead(200, {
-    'Content-Type': 'text/html'
-  });
+  res.writeHead(200, { 'Content-Type': 'text/html' });
   res.write('<html><head></head><body><div class="a">Nodejitsu Http Proxy</div><div class="b">&amp; Frames</div></body></html>');
   res.end();
 }).listen(9000); 
@@ -76,26 +74,26 @@ var req = http.request(options, function(res) {
     console.log('BODY: ' + chunk);
     out+= chunk;
   });
-
+  
   res.on('end', function(){
-     assert.equal('<html><head></head><body><div>Harmon Middleware</div><div>+ Trumpet</div></body></html>', out);
-     console.log("# Content Returned Correct");
-     consvr1.close();
-     server1.close();
-     proxy1 = null;
+      assert.equal('<html><head></head><body><div>Harmon Middleware</div><div>+ Trumpet</div></body></html>', out);
+      console.log("# Content Returned Correct");
+      consvr1.close();
+      server1.close();
+      proxy1 = null;
   });
       
   res.on('close', function(){
-     console.log("CLOSE");
+      console.log("CLOSE");
   });
 });
 
-req.on('error', function (e) {
-  console.log('problem with request: ' + e.message);
+req.on('error', function(e) {
+    console.log('problem with request: ' + e.message);
 });
 
-req.on('close', function () {
-  console.log("END");
+req.on('close', function(){
+    console.log("END");
 });
 
 // write data to request body
