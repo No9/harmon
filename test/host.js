@@ -101,36 +101,35 @@ req.write('<html><head></head><body><div class="a">Nodejitsu Http Proxy</div><di
 req.end();
 
 test('Streams can change the response size', function (t) {
-  t.plan(1);
+    t.plan(1);
 
-  var server2 = http.createServer(function (req, res) {
-    var s = '<body><p>hi</p></body>';
+    var server2 = http.createServer(function (req, res) {
+        var s = '<body><p>hi</p></body>';
 
-    res.setHeader('Content-Type', 'text/html');
-    res.setHeader('Content-length', '' + s.length); // All ASCII today
-    res.end(s);
-  }).listen(9001);
+        res.setHeader('Content-Type', 'text/html');
+        res.setHeader('Content-length', '' + s.length); // All ASCII today
+        res.end(s);
+    }).listen(9001);
 
-  var sizeChanger = {};
-  sizeChanger.query = 'p';
-  sizeChanger.func = function (elem) {
-    ws = elem.createWriteStream({
-      outer: true
-    })
-    ws.end('<p>A larger paragraph</p>');
-  }
+    var sizeChanger = {};
+        sizeChanger.query = 'p';
+        sizeChanger.func = function (elem) {
+            ws = elem.createWriteStream({outer: true})
+            ws.end('<p>A larger paragraph</p>');
+        }
 
-  var con2 = connect();
+    var con2 = connect();
 
-  con2.use(require('../')([], [sizeChanger]));
-  con2.use(function (req, res) {
-    proxy.web(req, res);
-  })
+    con2.use(require('../')([], [sizeChanger]));
+    con2.use(function (req, res) {
+        proxy.web(req, res);
+      }
+    )
 
-  var consvr2 = http.createServer(con2).listen(8001);
+    var consvr2 = http.createServer(con2).listen(8001);
 
-  var proxy = httpProxy.createProxyServer({
-      target: 'http://localhost:9001'
+    var proxy = httpProxy.createProxyServer({
+        target: 'http://localhost:9001'
     })
     /*
         var proxy2 = httpProxy.createServer(
