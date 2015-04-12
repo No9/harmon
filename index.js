@@ -8,14 +8,14 @@ module.exports = function harmonBinary(reqSelectors, resSelectors, htmlOnly) {
 
   function prepareRequestSelectors(req, res) {
     var tr = trumpet();
-
+  
     prepareSelectors(tr, _reqSelectors, req, res);
-
+    
     req.on('data', function(data) {
       tr.write(data);
     });
   }
-
+    
   function prepareResponseSelectors(req, res) {
     var tr          = trumpet();
     var _write      = res.write;
@@ -27,11 +27,13 @@ module.exports = function harmonBinary(reqSelectors, resSelectors, htmlOnly) {
 
     // Assume response is binary by default
     res.isHtml = false;
+    
     // Assume response is uncompressed by default
     res.isGziped = false;
 
     res.writeHead = function (code, headers) {
       var contentType = this.getHeader('content-type');
+      
       var contentEncoding = this.getHeader('content-encoding');
 
 
@@ -62,10 +64,10 @@ module.exports = function harmonBinary(reqSelectors, resSelectors, htmlOnly) {
           delete headers['content-length'];
         }
       }
-
+      
       _writeHead.apply(res, arguments);
     };
-
+    
     res.write = function (data, encoding) {
       // Only run data through trumpet if we have HTML
       if (res.isHtml) {
@@ -115,7 +117,7 @@ module.exports = function harmonBinary(reqSelectors, resSelectors, htmlOnly) {
       })(selectors[i].func, req, res);
     }
   }
-
+    
   return function harmonBinary(req, res, next) {
     var ignore = false;
 
