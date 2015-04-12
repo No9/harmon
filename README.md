@@ -4,6 +4,8 @@ A middleware component for [node-http-proxy](https://github.com/nodejitsu/node-h
 
 [![build status](https://secure.travis-ci.org/No9/harmon.png)](http://travis-ci.org/No9/harmon)
 
+![npmico](https://nodei.co/npm/harmon.png?downloads=true)
+
 ![harmon](http://i.imgur.com/fpMGL.png)
 
 ##install
