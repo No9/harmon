@@ -117,7 +117,7 @@ test('Streams can change the response size', function (t) {
             ws = elem.createWriteStream({outer: true})
             ws.end('<p>A larger paragraph</p>');
         }
-    
+
     var con2 = connect();
 
     con2.use(require('../')([], [sizeChanger]));
@@ -125,7 +125,7 @@ test('Streams can change the response size', function (t) {
         proxy.web(req, res);
       }
     )
-   
+
     var consvr2 = http.createServer(con2).listen(8001);
 
     var proxy = httpProxy.createProxyServer({
@@ -248,7 +248,7 @@ test('Gzipped content should be affected.', function (t) {
   // Check proxied response
   var testProxied = function(){
     http.get('http://localhost:8001', function (res) {
-      var str = ''; 
+      var str = '';
       res.on('data', function (data) {
         str += data;
       });
@@ -278,4 +278,89 @@ test('Gzipped content should be affected.', function (t) {
   }
   // Run tests
   testDirect(testProxied);
+});
+
+test('Gzipped content should be proxied when content is not html and htmlonly is true.', function (t) {
+    t.plan(3);
+    var initialString = JSON.stringify({hello:'world'});
+    var expectedString = JSON.stringify({hello:'world'});
+    var gunzip = zlib.Gunzip();
+    // Server that returns test gziped response
+    var server3 = http.createServer(function (req, res) {
+        var gzip = zlib.createGzip();
+        res.setHeader('Content-Type', 'application/json');
+        res.setHeader('Content-Encoding', 'gzip');
+        gzip.on('data', function (buf) {
+            res.write(buf);
+        });
+        gzip.on('end', function () {
+            res.end();
+        });
+        gzip.write(initialString);
+        gzip.end();
+
+    }).listen(9001);
+    // Proxy-Server
+    var proxy3 = httpProxy.createProxyServer({
+        target: 'http://localhost:9001'
+    })
+
+    var selector3 = {
+        query: '.b3',
+        func: function (node) {
+            node.createWriteStream().end('Gzipped IS affected');
+        }
+    };
+
+    var con3 = connect();
+    con3.use(require('../')([], [selector3], true));
+    con3.use(function (req, res) {
+        proxy3.web(req, res);
+    })
+
+    // Proxied Server
+    var consvr3 = http.createServer(con3).listen(8001);
+
+    // Check proxied response
+    var testProxied = function(){
+        http.get('http://localhost:8001', function (res) {
+            var str = '';
+            res.on('data', function (data) {
+                gunzip.write(data);
+            });
+            res.on('end', function () {
+                gunzip.end();
+            });
+            gunzip.on('data', function(data){
+                str += data.toString();
+            })
+
+            gunzip.on('end', function(){
+                // response string should be equals to expected
+                t.equals(str, expectedString);
+                t.equals(res.headers['content-encoding'], 'gzip');
+                t.end();
+                consvr3.close();
+                server3.close();
+                proxy3 = null;
+            })
+
+        });
+    }
+    // Check direct response
+    var testDirect = function(callback){
+        http.get('http://localhost:9001', function (res) {
+            var str = '';
+            res.on('data', function (data) {
+                str += data;
+            });
+            res.on('end', function () {
+                // initial string should be modified by gzip
+                t.notEquals(initialString, str);
+                callback();
+            });
+        });
+    }
+    // Run tests
+    testDirect(testProxied);
 });
