@@ -77,7 +77,7 @@ var http = require('http'),
         })
 
         //Additional true parameter can be used to ignore js and css files. 
-        //app.use(require('../')([], selects), true);
+        //app.use(require('../')([], selects, true));
 
         app.use(require('../')([], selects));
 
