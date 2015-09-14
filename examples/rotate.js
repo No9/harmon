@@ -8,11 +8,23 @@ var simpleselect = {};
 
 simpleselect.query = 'head';
 simpleselect.func = function (node) {
+	
     var out = '<style type="text/css"> img { ';
     out +='-webkit-transform: rotate(-90deg); ';
     out += '-moz-transform: rotate(-90deg); ';
     out += 'filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);}</style>';
-    node.createWriteStream({ outer: false }).end(out)
+	
+	var rs = node.createReadStream();
+	var ws = node.createWriteStream({outer: false});
+	
+	// Read the node and put it back into our write stream, 
+	// but don't end the write stream when the readStream is closed.
+	rs.pipe(ws, {end: false});
+	
+	// When the read stream has ended, attach our style to the end
+	rs.on('end', function(){
+		ws.end(out);
+	});
 } 
 
 selects.push(simpleselect);
