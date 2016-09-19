@@ -31,9 +31,11 @@ module.exports = function harmonBinary(reqSelectors, resSelectors, htmlOnly) {
     // Assume response is uncompressed by default
     res.isGziped = false;
 
-    res.writeHead = function (code, headers) {
-      var contentType = this.getHeader('content-type');
+    res.writeHead = function () {
+      var code = arguments[0];
+      var headers = (arguments.length > 2) ? arguments[2] : arguments[1]; // writeHead supports (statusCode, headers) as well as (statusCode, statusMessage, headers)
 
+      var contentType = this.getHeader('content-type');
       var contentEncoding = this.getHeader('content-encoding');
 
       /* Sniff out the content-type header.
