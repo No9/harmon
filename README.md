@@ -8,7 +8,7 @@ A middleware component for [node-http-proxy](https://github.com/nodejitsu/node-h
 
 ![harmon](http://i.imgur.com/fpMGL.png)
 
-##install
+## install ##
 
 ```
 $ npm install harmon
