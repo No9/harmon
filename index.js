@@ -35,8 +35,8 @@ module.exports = function harmonBinary(reqSelectors, resSelectors, htmlOnly) {
       var code = arguments[0];
       var headers = (arguments.length > 2) ? arguments[2] : arguments[1]; // writeHead supports (statusCode, headers) as well as (statusCode, statusMessage, headers)
 
-      var contentType = this.getHeader('content-type') || headers['content-type'];
-      var contentEncoding = this.getHeader('content-encoding') || headers['content-encoding'];
+      var contentType = this.getHeader('content-type') || ( headers ? headers['content-type'] : undefined );
+      var contentEncoding = this.getHeader('content-encoding') || ( headers ? headers['content-encoding'] : undefined );
 
       /* Sniff out the content-type header.
        * If the response is HTML, we're safe to modify it.
