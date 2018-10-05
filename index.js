@@ -25,54 +25,51 @@ module.exports = function harmonBinary(reqSelectors, resSelectors, htmlOnly) {
 
     prepareSelectors(tr, _resSelectors, req, res);
 
-    // Assume response is binary by default
-    res.isHtml = false;
+    res.isHtml = function () {
+      if (res._isHtml === undefined) {
+        var contentType = res.getHeader('content-type') || '';
+        res._isHtml = contentType.startsWith('text/html');
+      }
 
-    // Assume response is uncompressed by default
-    res.isGziped = false;
+      return res._isHtml;
+    }
+
+    res.isGzipped = function () {
+      if (res._isGzipped === undefined) {
+        var encoding = res.getHeader('content-encoding') || '';
+        res._isGzipped = encoding.toLowerCase() === 'gzip' && res.isHtml();
+      }
+
+      return res._isGzipped;
+    }
 
     res.writeHead = function () {
-      var code = arguments[0];
       var headers = (arguments.length > 2) ? arguments[2] : arguments[1]; // writeHead supports (statusCode, headers) as well as (statusCode, statusMessage, headers)
-
-      var contentType = this.getHeader('content-type') || ( headers ? headers['content-type'] : undefined );
-      var contentEncoding = this.getHeader('content-encoding') || ( headers ? headers['content-encoding'] : undefined );
+      headers = headers || {};
 
       /* Sniff out the content-type header.
        * If the response is HTML, we're safe to modify it.
        */
-      if (!_htmlOnly || ((typeof contentType != 'undefined') && (contentType.indexOf('text/html') == 0))) {
-        res.isHtml = true;
-
-        // Strip off the content length since it will change.
+      if (!_htmlOnly && res.isHtml()) {
         res.removeHeader('Content-Length');
-
-        if (headers) {
-          delete headers['content-length'];
-        }
+        delete headers['content-length'];
       }
 
-      /* Sniff out the content-type header.
+      /* Sniff out the content-encoding header.
        * If the response is Gziped, we're have to gunzip content before and ungzip content after.
        */
-      if (res.isHtml && contentEncoding && contentEncoding.toLowerCase() == 'gzip') {
-          res.isGziped = true;
-
-          // Strip off the content encoding since it will change.
-          res.removeHeader('Content-Encoding');
-
-          if (headers) {
-              delete headers['content-encoding'];
-          }
-     }
+      if (res.isHtml() && res.isGzipped()) {
+        res.removeHeader('Content-Encoding');
+        delete headers['content-encoding'];
+      }
 
       _writeHead.apply(res, arguments);
     };
 
     res.write = function (data, encoding) {
       // Only run data through trumpet if we have HTML
-      if (res.isHtml) {
-        if (res.isGziped) {
+      if (res.isHtml()) {
+        if (res.isGzipped()) {
           gunzip.write(data);
         } else {
           tr.write(data, encoding);
@@ -91,7 +88,7 @@ module.exports = function harmonBinary(reqSelectors, resSelectors, htmlOnly) {
     });
 
     res.end = function (data, encoding) {
-      if (res.isGziped) {
+      if (res.isGzipped()) {
         gunzip.end(data);
       } else {
         tr.end(data, encoding);
@@ -121,6 +118,7 @@ module.exports = function harmonBinary(reqSelectors, resSelectors, htmlOnly) {
 
   return function harmonBinary(req, res, next) {
     var ignore = false;
+
 
     if (_htmlOnly) {
       var lowercaseUrl = req.url.toLowerCase();
