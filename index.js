@@ -58,7 +58,7 @@ module.exports = function harmonBinary(reqSelectors, resSelectors, htmlOnly) {
       /* Sniff out the content-encoding header.
        * If the response is Gziped, we're have to gunzip content before and ungzip content after.
        */
-      if (res.isHtml() && res.isGzipped()) {
+      if (res.isGzipped()) {
         res.removeHeader('Content-Encoding');
         delete headers['content-encoding'];
       }
